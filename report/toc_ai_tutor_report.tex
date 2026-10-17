@@ -93,7 +93,7 @@ The overall architecture of Decidr consists of \textit{two} primary pipelines:
     \item an offline \textit{indexing} pipeline, and 
     \item an online \textit{inference} pipeline
 \end{itemize}
-The offline \textit{indexing} pipeline processes course materials into a searchable knowledge base prior to deployment, while the online \textit{inference} pipeline retrieves relevant course content in repsonse to student queries and generates context-aware responses using an LLM.
+The offline \textit{indexing} pipeline processes course materials into a searchable knowledge base prior to deployment, while the online \textit{inference} pipeline retrieves relevant course content in response to student queries and generates context-aware responses using an LLM.
 \begin{figure}[htbp]
     \centering
 
@@ -126,7 +126,7 @@ After extraction, the Markdown documents are divided into smaller chunks before 
 Decidr uses the \texttt{MarkdownHeaderTextSplitter} provided by LangChain, which preserves the document hierarchy by splitting content according to Markdown headings. As a result, each chunk remains associated with its corresponding lecture section and subsection, providing additional context during retrieval.
 \subsection{Dense Index Construction}
 Each document chunk is converted into a dense vector representation using the open-source \texttt{all-MiniLM-L6-v2} embedding model. These embeddings capture the semantic meaning of the text, allowing similar concepts to be retrieved even when different wording is used.~\\~\\
-The resulting embedding is stored is stored in a FAISS vector index \cite{douze24} to support efficient similarity search. Alongside the vector index, a lightweight SQLite database stores the original document content and associated metadata (e.g., lecture week, section, and subsection). During retrieval, FAISS erturns the identifies of the most relevant vectors, while the SQLite database is used to recover the corresponding document chunks supplied to the language model.
+The resulting embedding is stored is stored in a FAISS vector index \cite{douze24} to support efficient similarity search. Alongside the vector index, a lightweight SQLite database stores the original document content and associated metadata (e.g., lecture week, section, and subsection). During retrieval, FAISS returns the identifies of the most relevant vectors, while the SQLite database is used to recover the corresponding document chunks supplied to the language model.
 \subsection{Sparse Index Construction}
 In addition to dense retrieval, Decidr constructs a sparse retrieval index using the Okapi BM25 algorithm \cite{bm25okapi}. Each document chunk is tokenized and added to a BM25 corpus, enabling efficient keyword-based retrieval. Sparse retrieval complements dense retrieval by emphasizing exact terminology frequently used throughout Theory of Computation, such as deterministic finite automaton or Pumping Lemma.~\\~\\
 The offline indexing pipeline is executed only when course materials are updated. Once the dense and sparse indices have been constructed, they are reused by the online inference pipeline to answer student queries in real time.
