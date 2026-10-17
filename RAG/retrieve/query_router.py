@@ -6,7 +6,7 @@ load_dotenv()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-ROUTER_MODEL = "llama-3.1-8b-instant"
+ROUTER_MODEL = "openai/gpt-oss-20b"
 
 SYSTEM_PROMPT = """You are a query classifier for a Theory of Computation course chatbot.
 
